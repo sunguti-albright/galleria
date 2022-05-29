@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 class Image(models.Model):
-    image_name = models.CharField(max_length=30, default='No name')
+    image_name = models.CharField(max_length=30, default='')
     image_description = models.TextField(default='')
     image = models.ImageField(upload_to = 'images/',default='')
     image_location = models.ForeignKey('Location',default='', on_delete=models.CASCADE)

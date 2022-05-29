@@ -1,13 +1,14 @@
-from tabnanny import verbose
 from django.db import models
 
 # Create your models here.
 class Image(models.Model):
-    image_name = models.CharField(max_length=100),
-    image_description = models.CharField(max_length=200),
-    image = models.ImageField(upload_to= 'images/', default='')
-    image_location = models.ForeignKey('Location',on_delete=models.CASCADE,default='')
-    image_category = models.ForeignKey('Category',on_delete=models.CASCADE,default='')
+    image_name = models.CharField(max_length=30, default='No name')
+    image_description = models.TextField(default='')
+    image = models.ImageField(upload_to = 'images/',default='')
+    image_location = models.ForeignKey('Location',default='', on_delete=models.CASCADE)
+    image_category = models.ForeignKey('Category',default='', on_delete=models.CASCADE)
+
+
     def save_image(self):
         self.save()
 
@@ -23,7 +24,12 @@ class Image(models.Model):
     def __str__(self):
         return self.image_name
 
-   
+    @classmethod
+    def search_by_image_category(cls,search_term):
+        images = cls.objects.filter(image_category__category_name__icontains=search_term)
+        return images
+
+
 class Category(models.Model):
     category_name = models.CharField(max_length =30)
 
@@ -48,4 +54,8 @@ class Location(models.Model):
 
     def __str__(self):
         return self.location_name
+
+    @classmethod
+    def update_location(cls, id, value):
+        cls.objects.filter(id=id).update(location_name=value)
 
